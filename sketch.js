@@ -1,28 +1,23 @@
 
-// Source image to chop up
+
 let source;
 
-// Tiles configuration
 let tiles = [];
 let cols = 4;
 let rows = 4;
 let w, h;
 
-// Order of tiles
 let board = [];
 
-// Loading the image
 function preload() {
   source = loadImage("skzmypace.png");
 }
 
 function setup() {
   createCanvas(400, 400);
-  // pixel dimensions of each tiles
   w = width / cols;
   h = height / rows;
   
-  // Chop up source image into tiles
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       let x = i * w;
@@ -36,51 +31,40 @@ function setup() {
     }
   }
   
-  // Remove the last tile
   tiles.pop();
   board.pop();
-  // -1 means empty spot
   board.push(-1);
   
-  // Shuffle the board
   simpleShuffle(board);
 }
 
-// Swap two elements of an array
 function swap(i, j, arr) {
   let temp = arr[i];
   arr[i] = arr[j];
   arr[j] = temp;
 }
 
-// Pick a random spot to attempt a move
-// This should be improved to select from only valid moves
 function randomMove(arr) {
   let r1 = floor(random(cols));
   let r2 = floor(random(rows));
   move(r1, r2, arr);
 }
 
-// Shuffle the board
 function simpleShuffle(arr) {
   for (let i = 0; i < 1000; i++) {
     randomMove(arr);
   }
 }
 
-// Move based on click
 function mousePressed() {
   let i = floor(mouseX / w);
   let j = floor(mouseY / h);
   move(i,j,board);
 }
 
-
-
 function draw() {
   background(0);
 
-  // Draw the current board
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       let index = i + j * cols;
@@ -94,7 +78,6 @@ function draw() {
     }
   }
   
-  // Show it as grid
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
       let x = i * w;
@@ -105,13 +88,11 @@ function draw() {
     }
   }
   
-  // If it is solved
   if (isSolved()) {
     console.log("SOLVED");
   }
 }
 
-// Check if solved
 function isSolved() {
   for (let i = 0; i < board.length-1; i++) {
     if (board[i] !== tiles[i].index) {
@@ -121,19 +102,16 @@ function isSolved() {
   return true;
 }
 
-// Swap two pieces
 function move(i, j, arr) {
   let blank = findBlank();
   let blankCol = blank % cols;
   let blankRow = floor(blank / rows);
   
-  // Double check valid move
   if (isNeighbor(i, j, blankCol, blankRow)) {
     swap(blank, i + j * cols, arr);
   }
 }
 
-// Check if neighbor
 function isNeighbor(i, j, x, y) {
   if (i !== x && j !== y) {
     return false;
@@ -145,11 +123,11 @@ function isNeighbor(i, j, x, y) {
   return false;
 }
 
-
-// Probably could just use a variable
-// to track blank spot
 function findBlank() {
   for (let i = 0; i < board.length; i++) {
     if (board[i] == -1) return i;
   }
 }
+
+
+//The Coding Train
